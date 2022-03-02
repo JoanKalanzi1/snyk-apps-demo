@@ -1,7 +1,7 @@
 import type { Controller } from '../../types';
 import type { NextFunction, Request, Response } from 'express';
 import { Router } from 'express';
-import { getProjectsFromApi } from './projectsHandlers';
+
 
 /**
  * The ProjectsController class for handling user projects
@@ -9,9 +9,9 @@ import { getProjectsFromApi } from './projectsHandlers';
  * implements the controller interface which
  * has two members the path and the router.
  */
-export class ProjectsController implements Controller {
+export class joanController implements Controller {
   // The base URL path for this controller
-  public path = '/projects';
+  public path = '/joan';
   // Express router for this controller
   public router = Router();
 
@@ -25,7 +25,7 @@ export class ProjectsController implements Controller {
 
   private initRoutes() {
     // The route to render all user projects lists
-    this.router.get(`${this.path}`, this.getProjects);
+    this.router.get(`${this.path}`, this.joan);
   }
 
   /**
@@ -35,11 +35,11 @@ export class ProjectsController implements Controller {
    * otherwise error via next function for error
    * middleware to handle
    */
-  private async getProjects(req: Request, res: Response, next: NextFunction) {
+  private  joan (req: Request, res: Response, next: NextFunction) {
     try {
-      const projects = await getProjectsFromApi();
-      return res.json({ key :"helooo"});
-     
+      
+    //   return res.json({hey : "this is my world"});
+      return res.render('joan')
     } catch (error) {
       return next(error);
     }

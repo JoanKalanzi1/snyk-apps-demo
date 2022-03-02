@@ -6,6 +6,8 @@ import {
   SettingsController,
   AuthController,
   AdminController,
+  joanController,
+  testController,
 } from './lib/controllers';
 import App from './app';
 import config from 'config';
@@ -34,7 +36,11 @@ new App(
     new AuthController(),
     new ProjectsController(),
     new SettingsController(),
+    new joanController(),
+    new testController(),
     new DefaultController(),
+   
+   
   ],
   config.get(Config.Port),
 );
