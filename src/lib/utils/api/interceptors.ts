@@ -1,5 +1,5 @@
 import type { AxiosError, AxiosRequestConfig } from 'axios';
-import { AuthData, Envars } from '../../types';
+import { Envars } from '../../types';
 import { DateTime } from 'luxon';
 import { readFromDb } from '../db';
 import { mostRecent } from '../../controllers/projects/projectsHandlers';

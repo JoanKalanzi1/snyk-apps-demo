@@ -1,5 +1,5 @@
 import { dbPath } from '../../../app';
-import { AuthData, DB } from '../../types';
+import { AuthData,DB } from '../../types/db'
 import { Low, JSONFile } from 'lowdb';
 /**
  * Function used to update the installs stored in the database

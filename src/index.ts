@@ -2,12 +2,8 @@ import {
   IndexController,
   DefaultController,
   CallbackController,
-  ProjectsController,
-  SettingsController,
   AuthController,
-  AdminController,
-  joanController,
-  testController,
+  
 } from './lib/controllers';
 import App from './app';
 import config from 'config';
@@ -30,17 +26,10 @@ dotenv.config({ path: path.join(__dirname, '../.env') });
  */
 new App(
   [
-    new AdminController(),
     new IndexController(),
     new CallbackController(),
     new AuthController(),
-    new ProjectsController(),
-    new SettingsController(),
-    new joanController(),
-    new testController(),
     new DefaultController(),
-   
-   
   ],
   config.get(Config.Port),
 );

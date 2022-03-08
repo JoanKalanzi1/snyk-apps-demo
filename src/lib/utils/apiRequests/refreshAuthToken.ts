@@ -1,7 +1,8 @@
 import axios from 'axios';
 import qs from 'qs';
 import { GrantType } from '../../types/grantType';
-import { AuthData, Config, Envars } from '../../types';
+import { Config, Envars } from '../../types';
+import {  AuthData } from '../../types/db';
 import { API_BASE } from '../../../app';
 import config from 'config';
 

@@ -1,6 +1,6 @@
 import { Low, JSONFile } from 'lowdb';
 import { dbPath } from '../../../app';
-import { AuthData } from '../../types';
+import { AuthData } from '../../types/db';
 import { readFromDb } from './readFromDb';
 
 /**
