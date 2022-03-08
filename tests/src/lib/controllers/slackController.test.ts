@@ -8,8 +8,8 @@ describe('works with async/await',async () => {
     it('should  recieve back channel name', async() => {
         
         nock('https://hooks.slack.com/services/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')
-        .post('/post', { channnel: '#slack-snyk-app-test-channel', text:  'Hello, World!' })
-        .reply(200, { status: 'OK' });
+        .post('/post')
+        .reply(200, , { channnel: '#slack-snyk-app-test-channel', text:  'Hello, World!' });
       
 
         const slackController= await run();
