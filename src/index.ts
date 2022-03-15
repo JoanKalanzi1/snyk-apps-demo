@@ -3,6 +3,9 @@ import {
   DefaultController,
   CallbackController,
   AuthController,
+  OrgsController,
+  SlackController,
+
   
 } from './lib/controllers';
 import App from './app';
@@ -29,6 +32,8 @@ new App(
     new IndexController(),
     new CallbackController(),
     new AuthController(),
+    new OrgsController(),
+    new SlackController(),
     new DefaultController(),
   ],
   config.get(Config.Port),

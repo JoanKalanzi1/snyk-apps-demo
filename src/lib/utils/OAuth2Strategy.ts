@@ -1,17 +1,17 @@
 import type { Request } from 'express';
 import { VerifyCallback } from 'passport-oauth2';
 import SnykOAuth2Strategy, { ProfileFunc } from '@snyk/passport-snyk-oauth2';
-import { writeToDb } from '../db';
-import { EncryptDecrypt } from '../encrypt-decrypt';
-import { APIVersion,  Config, Envars } from '../../types';
-import {AuthData } from '../../types/db';
-import { API_BASE, APP_BASE } from '../../../app';
-import { getAppOrg } from '../apiRequests';
+import { writeToDb } from './db';
+import { EncryptDecrypt } from './encrypt-decrypt';
+import { APIVersion,  Config, Envars } from '../types';
+import {AuthData } from '../types/db';
+import { API_BASE, APP_BASE } from '../../app';
+import { getAppOrg } from './apiRequests';
 import { v4 as uuid4 } from 'uuid';
 import config from 'config';
 import jwt_decode from 'jwt-decode';
 import { AxiosResponse } from 'axios';
-import { callSnykApi } from '../api';
+import { callSnykApi } from './api';
 
 type Params = {
   expires_in: number;

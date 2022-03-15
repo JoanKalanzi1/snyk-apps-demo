@@ -1,7 +1,7 @@
 import type { Controller } from '../../types';
 import type { NextFunction, Request, Response } from 'express';
 import { Router } from 'express';
-import { postToSlack } from './slackHandler';
+import {  fetchOrgNames} from './orgsHandlers';
 
 /**
  * The ProjectsController class for handling user projects
@@ -9,9 +9,9 @@ import { postToSlack } from './slackHandler';
  * implements the controller interface which
  * has two members the path and the router.
  */
- export class SlackController implements Controller {
+ export class OrgsController implements Controller {
     // The base URL path for this controller
-    public path = '/slack';
+    public path = '/orgs';
     // Express router for this controller
     public router = Router();
   
@@ -25,7 +25,7 @@ import { postToSlack } from './slackHandler';
   
     private initRoutes() {
       // The route to render all user projects lists
-      this.router.get(`${this.path}`, this.postSlack);
+      this.router.get(`${this.path}`, this.getOrgs);
     }
   
     /**
@@ -35,15 +35,14 @@ import { postToSlack } from './slackHandler';
      * otherwise error via next function for error
      * middleware to handle
      */
-    private async postSlack(req: Request, res: Response, next: NextFunction) {
+    private async getOrgs(req: Request, res: Response, next: NextFunction) {
       try {
-        const webhook = await postToSlack();
-        return res.render('slack', {
-          webhook,
+        const user = await fetchOrgNames();
+        return res.render('orgs', {
+          user,
         });
       } catch (error) {
         return next(error);
       }
     }
   }
-

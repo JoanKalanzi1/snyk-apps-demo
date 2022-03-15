@@ -6,6 +6,7 @@ import { mostRecent } from '../../controllers/projects/projectsHandlers';
 import { EncryptDecrypt } from '../encrypt-decrypt';
 import { refreshAuthToken } from '../apiRequests';
 import { updateDb } from '../db';
+import { AuthData } from '../../types';
 import axios from 'axios';
 
 /**
