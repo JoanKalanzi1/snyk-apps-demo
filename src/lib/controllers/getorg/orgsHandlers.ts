@@ -1,8 +1,5 @@
-import type { Controller } from '../../types';
+
 const axios = require('axios').default;
-
-import { Envars } from '../../types/envars';
-
 const url = 'https://snyk.io/api/v1/user/me';
 
 
@@ -44,7 +41,4 @@ export async function fetchOrgNames(): Promise<string[] | string> {
     return 'error';
   }
 }
-
-
-
 

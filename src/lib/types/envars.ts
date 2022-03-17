@@ -5,6 +5,7 @@ export  const enum Envars {
   Scopes = 'SCOPES',
   EncryptionSecret = 'ENCRYPTION_SECRET',
   SlackToken = 'SLACK_TOKEN',
-  ApiKey = 'API_KEY'
+  ApiKey = 'API_KEY',
+  OrgId ='ORG_ID'
 
 }

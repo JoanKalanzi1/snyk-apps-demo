@@ -5,6 +5,11 @@ import {
   AuthController,
   OrgsController,
   SlackController,
+  OrgProjectController,
+  ProjectNameController
+
+
+
 
   
 } from './lib/controllers';
@@ -34,6 +39,8 @@ new App(
     new AuthController(),
     new OrgsController(),
     new SlackController(),
+    new OrgProjectController(),
+    new ProjectNameController(),
     new DefaultController(),
   ],
   config.get(Config.Port),

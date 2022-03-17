@@ -1,8 +1,7 @@
 import type { Controller } from '../../types';
 import type { NextFunction, Request, Response } from 'express';
 import { Router } from 'express';
-import { postToSlack, postProjectNames } from './slackHandler';
-
+import {  fetchProjectNames} from './orgprojectsHandler';
 
 /**
  * The ProjectsController class for handling user projects
@@ -10,9 +9,9 @@ import { postToSlack, postProjectNames } from './slackHandler';
  * implements the controller interface which
  * has two members the path and the router.
  */
- export class SlackController implements Controller {
+ export class OrgProjectController implements Controller {
     // The base URL path for this controller
-    public path = '/slack';
+    public path = '/orgProjects';
     // Express router for this controller
     public router = Router();
   
@@ -26,13 +25,8 @@ import { postToSlack, postProjectNames } from './slackHandler';
   
     private initRoutes() {
       // The route to render all user projects lists
-      this.router.get(`${this.path}`, this.postSlack);
-      this.router.get(`${this.path}`, this.ProjectNames);
-
+      this.router.get(`${this.path}`, this.getorgProject);
     }
-
-   
-
   
     /**
      * Gets the projects page from the Snyk API using the
@@ -41,28 +35,15 @@ import { postToSlack, postProjectNames } from './slackHandler';
      * otherwise error via next function for error
      * middleware to handle
      */
-    private async postSlack(req: Request, res: Response, next: NextFunction) {
+    private async getorgProject(req: Request, res: Response, next: NextFunction) {
       try {
-        const webhook = await postToSlack();
-        return res.render('slack', {
-          webhook,
-        });
-      } catch (error) {
-        return next(error);
-      }
-    }
-
-
-    private async ProjectNames(req: Request, res: Response, next: NextFunction) {
-      try {
-        const webhook = await postProjectNames();
-        return res.render('slack', {
-          webhook,
+        const projectData = await fetchProjectNames();
+        console.log("projectData",projectData)
+        return res.render('orgProjects', {
+         projectData,
         });
       } catch (error) {
         return next(error);
       }
     }
   }
-  
-
