@@ -167,7 +167,7 @@ class App {
    * required to use passportjs with OAuth2.0 Snyk Authorization
    * flow.
    * 1. Initialize a passport strategy, like we go in the getOAuth2
-   * 2. Setup passport middleware with all the settings, like we do
+   * 2. Setup  middleware with all the settings, like we do
    *    below
    * 3. Call passport.authenticate function to initiate auth flow
    *    like we do in the authController

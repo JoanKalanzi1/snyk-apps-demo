@@ -1,7 +1,8 @@
 import type { Controller } from '../../types';
 import type { NextFunction, Request, Response } from 'express';
 import { Router } from 'express';
-import { postToSlack, postProjectNames } from './slackHandler';
+import { postToSlack, postProjectNames  } from './slackHandler';
+import { fetchOrgNames } from "../getorg/orgsHandlers";
 
 
 /**
@@ -27,7 +28,7 @@ import { postToSlack, postProjectNames } from './slackHandler';
     private initRoutes() {
       // The route to render all user projects lists
       this.router.get(`${this.path}`, this.postSlack);
-      this.router.get(`${this.path}`, this.ProjectNames);
+      // this.router.get(`${this.path}`, this.ProjectNames);
 
     }
 
@@ -43,9 +44,11 @@ import { postToSlack, postProjectNames } from './slackHandler';
      */
     private async postSlack(req: Request, res: Response, next: NextFunction) {
       try {
-        const webhook = await postToSlack();
+        const names = await fetchOrgNames()
+        const webhook = await postToSlack(names);
+        const projectNames = await postProjectNames();
         return res.render('slack', {
-          webhook,
+         projectNames,
         });
       } catch (error) {
         return next(error);
@@ -53,16 +56,16 @@ import { postToSlack, postProjectNames } from './slackHandler';
     }
 
 
-    private async ProjectNames(req: Request, res: Response, next: NextFunction) {
-      try {
-        const webhook = await postProjectNames();
-        return res.render('slack', {
-          webhook,
-        });
-      } catch (error) {
-        return next(error);
-      }
-    }
+    // private async ProjectNames(req: Request, res: Response, next: NextFunction) {
+    //   try {
+    //     const webhook = await postProjectNames();
+    //     return res.render('slack', {
+    //       webhook,
+    //     });
+    //   } catch (error) {
+    //     return next(error);
+    //   }
+    // }
   }
   
 

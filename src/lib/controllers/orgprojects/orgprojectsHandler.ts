@@ -1,8 +1,5 @@
-import { objectExpression } from "@babel/types";
 
 const axios = require('axios').default;
-
-
 
 interface ProjectData {
     type:string;

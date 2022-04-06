@@ -1,3 +1,4 @@
+
 import { readFromDb } from '../../utils/db';
 import { callSnykApi } from '../../utils/api';
 import { EncryptDecrypt } from '../../utils/encrypt-decrypt';
@@ -21,10 +22,18 @@ export async function getProjectsFromApi(): Promise<unknown[]> {
   const eD = new EncryptDecrypt(process.env[Envars.EncryptionSecret] as string);
   const access_token = eD.decryptString(data?.access_token);
   const token_type = data?.token_type;
-  // Call the axios instance configured for Snyk API v1
-  const result = await callSnykApi(token_type, access_token, APIVersion.V1).post(`/org/${data?.orgId}/projects`);
 
-  return result.data.projects || [];
+  // Call the axios instance configured for Snyk API v1
+  const requests = (data?.orgs ?? []).map((org) =>
+    callSnykApi(token_type, access_token, APIVersion.V1)
+      .post(`/org/${org.id}/projects`)
+      .then((project) => ({
+        org: org.name,
+        projects: project.data.projects || [],
+      })),
+  );
+
+  return Promise.all(requests);
 }
 
 /**

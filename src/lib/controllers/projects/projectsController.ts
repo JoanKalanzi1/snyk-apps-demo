@@ -5,7 +5,7 @@ import { getProjectsFromApi } from './projectsHandlers';
 
 /**
  * The ProjectsController class for handling user projects
- * page and related refecquests. Every controller class
+ * page and related requests. Every controller class
  * implements the controller interface which
  * has two members the path and the router.
  */
