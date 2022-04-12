@@ -6,8 +6,3 @@ export * from './getorg/orgsController';
 export * from './slack/slackController';
 export * from './orgprojects/orgprojectController';
 export * from './projectnames/slackprojectnamesController';
-
-
-
-
-

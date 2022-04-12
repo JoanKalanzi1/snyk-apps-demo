@@ -44,7 +44,7 @@
     "@types/form-data": "^2.5.0",
     "@types/jest": "^27.0.1",
     "@types/lowdb": "^1.0.11",
-    "@types/luxon": "^2.0.4",
+    "@types/luxon": "^2.3.1",
     "@types/ncp": "^2.0.5",
     "@types/node": "^16.9.1",
     "@types/node-fetch": "^2.6.1",
@@ -91,7 +91,9 @@
     "node-fetch": "^2.6.7",
     "passport": "^0.4.1",
     "passport-oauth2": "^1.6.1",
-    "qs": "^6.10.1"
+    "qs": "^6.10.1",
+    "sequelize": "^6.18.0",
+    "sqlite3": "^5.0.2"
   },
   "nodemonConfig": {
     "ignore": [

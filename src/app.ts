@@ -15,10 +15,14 @@ import { getOAuth2 } from './lib/utils/OAuth2Strategy';
 import { v4 as uuidv4 } from 'uuid';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import getSqliteInstance from './lib/utils/db/database';
+import { Sequelize } from 'sequelize/types';
 
 export const API_BASE = config.get(Config.ApiBase);
 export const APP_BASE = config.get(Config.AppBase);
-
+const dbFolder = join(__dirname, '../db');
+      export const dbPath = join(dbFolder, 'db.sqlite');
+      export const sqliteInstance = getSqliteInstance(dbPath);
 /**
  * The App class has all app related configuration required
  * to run the app instance.
@@ -39,10 +43,11 @@ class App {
     this.app = express();
     // Check the require environmental variables are set
     this.checkEnvVars();
+
     // Initialize the DB file(we use lightweight JSON based lowdb for this demo app)
-    this.initDatabaseFile();
     this.initGlobalMiddlewares();
     this.initRoutes(controllers);
+    this.initSQliteDb();
     // Error handler middleware at the last
     this.initErrorHandler();
     // Start the server
@@ -58,7 +63,17 @@ class App {
       this.app.use('/', controller.router);
     });
   }
-
+  private async initSQliteDb() {
+    try {
+      
+      console.log(dbPath);
+      (await sqliteInstance.sync({force: true})).authenticate()
+      // await sqliteInstance.authenticate();
+      console.log('connected to sqlite db');
+    } catch (error) {
+      console.error(error);
+    }
+  }
   /**
    *
    * @param {Number} port Start the app the listen on the port specified
@@ -144,22 +159,6 @@ class App {
   /**
    * Initialize the database file to be used by our DB
    */
-  private initDatabaseFile() {
-    try {
-      const dbFolder = join(__dirname, '../db');
-      dbPath = join(dbFolder, 'db.json');
-      console.log(`
-            Using db: ${dbPath}`);
-
-      if (!fs.existsSync(dbPath)) {
-        if (!fs.existsSync(dbFolder)) {
-          fs.mkdirSync(dbFolder);
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   /**
    * Snyk Apps use OAuth2.0 and in this app we use passportjs
@@ -205,5 +204,4 @@ class App {
   }
 }
 
-export let dbPath: string;
 export default App;

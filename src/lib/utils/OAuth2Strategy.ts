@@ -1,17 +1,16 @@
 import type { Request } from 'express';
 import { VerifyCallback } from 'passport-oauth2';
 import SnykOAuth2Strategy, { ProfileFunc } from '@snyk/passport-snyk-oauth2';
-import { writeToDb } from './db';
 import { EncryptDecrypt } from './encrypt-decrypt';
-import { APIVersion,  Config, Envars } from '../types';
-import {AuthData } from '../types/db';
+import { APIVersion, Config, Envars } from '../types';
 import { API_BASE, APP_BASE } from '../../app';
-import { getAppOrg } from './apiRequests';
+import { getAppOrgs } from './apiRequests';
 import { v4 as uuid4 } from 'uuid';
 import config from 'config';
 import jwt_decode from 'jwt-decode';
 import { AxiosResponse } from 'axios';
 import { callSnykApi } from './api';
+import User from '../utils/db/dbmodel';
 
 type Params = {
   expires_in: number;
@@ -104,19 +103,18 @@ export function getOAuth2(): SnykOAuth2Strategy {
          * as the profile functions as the auth token for Snyk Apps
          * are managed on the Snyk org level
          */
-        const { orgId } = await getAppOrg(token_type, access_token);
+        const { orgs } = await getAppOrgs(token_type, access_token);
         const ed = new EncryptDecrypt(process.env[Envars.EncryptionSecret] as string);
-        await writeToDb({
-          date: new Date(),
+        await User.create({
           userId,
-          orgId,
+          orgs,
           access_token: ed.encryptString(access_token),
           expires_in,
           scope,
           token_type,
           refresh_token: ed.encryptString(refresh_token),
           nonce,
-        } as AuthData);
+        });
       } catch (error) {
         return done(error as Error, false);
       }

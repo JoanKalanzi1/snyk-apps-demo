@@ -1,8 +1,7 @@
-
-import { readFromDb } from '../../utils/db';
 import { callSnykApi } from '../../utils/api';
 import { EncryptDecrypt } from '../../utils/encrypt-decrypt';
-import { APIVersion, AuthData, Envars } from '../../types';
+import { APIVersion, Envars } from '../../types';
+import User from '../../utils/db/dbmodel';
 
 /**
  * Get projects handler that fetches all user projects
@@ -11,39 +10,30 @@ import { APIVersion, AuthData, Envars } from '../../types';
  * token scopes on what you can and can not access
  * @returns List of user project or an empty array
  */
-export async function getProjectsFromApi(): Promise<unknown[]> {
+export async function getProjectsFromApi(): Promise<unknown> {
   // Read data from DB
-  const db = await readFromDb();
-  const data = mostRecent(db.installs);
-  // If no data return empty array
-  if (!data) return [];
+  //TODO : FIX LATER TO GET THE CORRECT USER
+
+  //get all users in the database
+  const users = await User.findAll();
+  const data = users[0];
+
+  //get users from database
 
   // Decrypt data(access token)
   const eD = new EncryptDecrypt(process.env[Envars.EncryptionSecret] as string);
   const access_token = eD.decryptString(data?.access_token);
   const token_type = data?.token_type;
 
+  //TODO: Get the user to select the ORG
+  const getOrg = data.orgs[0];
+
   // Call the axios instance configured for Snyk API v1
-  const requests = (data?.orgs ?? []).map((org) =>
-    callSnykApi(token_type, access_token, APIVersion.V1)
-      .post(`/org/${org.id}/projects`)
-      .then((project) => ({
-        org: org.name,
-        projects: project.data.projects || [],
-      })),
-  );
 
-  return Promise.all(requests);
-}
-
-/**
- *
- * @param {AuthData[]} installs get most recent install from list of installs
- * @returns the latest install or void
- */
-export function mostRecent(installs: AuthData[]): AuthData | void {
-  if (installs) {
-    return installs[installs.length - 1];
-  }
-  return;
+  return callSnykApi(token_type, access_token, APIVersion.V1)
+    .post(`/org/${getOrg}/projects`)
+    .then((project) => ({
+      org: getOrg,
+      projects: project.data.projects || [],
+    }));
 }

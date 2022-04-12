@@ -1,4 +1,4 @@
-export  const enum Envars {
+export const enum Envars {
   ClientId = 'CLIENT_ID',
   ClientSecret = 'CLIENT_SECRET',
   RedirectUri = 'REDIRECT_URI',
@@ -6,6 +6,5 @@ export  const enum Envars {
   EncryptionSecret = 'ENCRYPTION_SECRET',
   SlackToken = 'SLACK_TOKEN',
   ApiKey = 'API_KEY',
-  OrgId ='ORG_ID'
-
+  OrgId = 'ORG_ID',
 }

@@ -1,7 +1,5 @@
-
 const axios = require('axios').default;
 const url = 'https://snyk.io/api/v1/user/me';
-
 
 interface OrgData {
   name: string;
@@ -9,7 +7,7 @@ interface OrgData {
   group: object;
 }
 
- async function fetchUserOrgs(): Promise<Array<OrgData> | string> {
+async function fetchUserOrgs(): Promise<Array<OrgData> | string> {
   try {
     const apiKey = process.env.API_KEY as string;
     const response = await axios.get(url, {
@@ -41,4 +39,3 @@ export async function fetchOrgNames(): Promise<string[] | string> {
     return 'error';
   }
 }
-

@@ -1,12 +1,9 @@
 import type { AxiosError, AxiosRequestConfig } from 'axios';
 import { Envars } from '../../types';
 import { DateTime } from 'luxon';
-import { readFromDb } from '../db';
-import { mostRecent } from '../../controllers/projects/projectsHandlers';
+import User from '../../utils/db/dbmodel';
 import { EncryptDecrypt } from '../encrypt-decrypt';
 import { refreshAuthToken } from '../apiRequests';
-import { updateDb } from '../db';
-import { AuthData } from '../../types';
 import axios from 'axios';
 
 /**
@@ -18,16 +15,20 @@ import axios from 'axios';
  */
 export async function refreshTokenReqInterceptor(request: AxiosRequestConfig): Promise<AxiosRequestConfig> {
   // Read the latest data(auth token, refresh token and expiry)
-  const db = await readFromDb();
-  const data = mostRecent(db.installs);
-  // If no data then continue with the request
-  if (!data) return request;
+
+  //TODO : FIX LATER TO GET THE CORRECT USER
+  //get all users in the database
+  const users = await User.findAll();
+  const data = users[0];
+
   // Data used to calculate the expiry
-  const expiresIn = data.expires_in;
-  const createdDate = data.date;
+  const expiresIn = data.expire_in;
+  const updatedDate = data.updatedAt;
+  const stringUpdated = DateTime.fromISO(updatedDate.toString());
   // Used npm library luxon to parse the date and calculate expiry
-  const parsedCreateDate = DateTime.fromISO(createdDate.toString());
-  const expirationDate = parsedCreateDate.plus({ seconds: expiresIn });
+
+  const expirationDate = stringUpdated.plus({ seconds: expiresIn });
+
   // Check if expired
   if (expirationDate < DateTime.now()) {
     await refreshAndUpdateDb(data);
@@ -42,10 +43,10 @@ export async function refreshTokenRespInterceptor(error: AxiosError): Promise<Ax
   //  invalidated before it expires, such as the signing key being rotated in an emergency.
   if (status === 401) {
     // Read the latest data(auth token, refresh token and expiry)
-    const db = await readFromDb();
-    const data = mostRecent(db.installs);
-    // If no data then fail the retry
-    if (!data) return Promise.reject(error);
+    //TODO : FIX LATER TO GET THE CORRECT USER
+    //get all users in the database
+    const users = await User.findAll();
+    const data = users[0];
 
     const newAccessToken = await refreshAndUpdateDb(data);
 
@@ -59,10 +60,10 @@ export async function refreshTokenRespInterceptor(error: AxiosError): Promise<Ax
 
 /**
  * Refreshes the access-token for a given DB record, and updates the DB again
- * @param {AuthData} data database entry with authentication info
+ * @param {User} data database entry with authentication info
  * @returns string Newly refreshed access-token
  */
-async function refreshAndUpdateDb(data: AuthData): Promise<string> {
+async function refreshAndUpdateDb(data: User): Promise<string> {
   // Create a instance for encryption and decryption
   const eD = new EncryptDecrypt(process.env[Envars.EncryptionSecret] as string);
   // Make request to refresh token
@@ -71,15 +72,17 @@ async function refreshAndUpdateDb(data: AuthData): Promise<string> {
   );
   // Update the access and refresh token with the newly fetched access and refresh token
   // along with the expiry and other required info
-  await updateDb(data, {
-    ...data,
-    access_token: eD.encryptString(access_token),
-    expires_in,
-    refresh_token: eD.encryptString(refresh_token),
-    token_type,
-    scope,
-    date: new Date(),
-  });
+  await User.update(
+    {
+      access_token: eD.encryptString(access_token),
+      expires_in,
+      refresh_token: eD.encryptString(refresh_token),
+      token_type,
+    },
+    {
+      where: { userId: data.userId },
+    },
+  );
 
   return access_token;
 }
