@@ -2,8 +2,6 @@ import express from 'express';
 import { reqError } from './lib/middlewares';
 import * as path from 'path';
 import { envCheck, Severity } from 'envar-check';
-import * as fs from 'fs';
-import { join } from 'path';
 import type { Application } from 'express';
 import type { Server } from 'http';
 import type { Controller } from './lib/types';
@@ -15,14 +13,12 @@ import { getOAuth2 } from './lib/utils/OAuth2Strategy';
 import { v4 as uuidv4 } from 'uuid';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
-import getSqliteInstance from './lib/utils/db/database';
-import { Sequelize } from 'sequelize/types';
+import dbConfig from './lib/utils/sqliteDatabase/database';
+
 
 export const API_BASE = config.get(Config.ApiBase);
 export const APP_BASE = config.get(Config.AppBase);
-const dbFolder = join(__dirname, '../db');
-      export const dbPath = join(dbFolder, 'db.sqlite');
-      export const sqliteInstance = getSqliteInstance(dbPath);
+
 /**
  * The App class has all app related configuration required
  * to run the app instance.
@@ -63,17 +59,19 @@ class App {
       this.app.use('/', controller.router);
     });
   }
+  
+
+
   private async initSQliteDb() {
     try {
       
-      console.log(dbPath);
-      (await sqliteInstance.sync({force: true})).authenticate()
-      // await sqliteInstance.authenticate();
+      (await dbConfig.sync({force: true})).authenticate()
       console.log('connected to sqlite db');
     } catch (error) {
       console.error(error);
     }
   }
+  /**
   /**
    *
    * @param {Number} port Start the app the listen on the port specified

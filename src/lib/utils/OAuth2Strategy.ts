@@ -10,7 +10,8 @@ import config from 'config';
 import jwt_decode from 'jwt-decode';
 import { AxiosResponse } from 'axios';
 import { callSnykApi } from './api';
-import User from '../utils/db/dbmodel';
+import {User} from './sqliteDatabase/dbmodel';
+
 
 type Params = {
   expires_in: number;
@@ -103,9 +104,10 @@ export function getOAuth2(): SnykOAuth2Strategy {
          * as the profile functions as the auth token for Snyk Apps
          * are managed on the Snyk org level
          */
-        const { orgs } = await getAppOrgs(token_type, access_token);
+        const orgs = await getAppOrgs(token_type, access_token);
+  
         const ed = new EncryptDecrypt(process.env[Envars.EncryptionSecret] as string);
-        await User.create({
+         const newUser = await User.create({
           userId,
           orgs,
           access_token: ed.encryptString(access_token),
@@ -115,10 +117,13 @@ export function getOAuth2(): SnykOAuth2Strategy {
           refresh_token: ed.encryptString(refresh_token),
           nonce,
         });
+        console.log(newUser, "user has been created")
+       
       } catch (error) {
         return done(error as Error, false);
       }
       return done(null, { nonce });
     },
+
   );
 }

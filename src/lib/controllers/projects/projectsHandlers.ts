@@ -1,7 +1,7 @@
 import { callSnykApi } from '../../utils/api';
 import { EncryptDecrypt } from '../../utils/encrypt-decrypt';
 import { APIVersion, Envars } from '../../types';
-import User from '../../utils/db/dbmodel';
+import User from '../../utils/sqliteDatabase/dbmodel';
 
 /**
  * Get projects handler that fetches all user projects

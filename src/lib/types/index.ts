@@ -3,5 +3,4 @@ export * from './urlData';
 export * from './envars';
 export * from './config';
 export * from './apiVersion';
-export * from '../utils/db/dbmodel';
 export * from './models';

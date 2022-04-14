@@ -1,7 +1,7 @@
 import axios from 'axios';
 import qs from 'qs';
 import { GrantType } from '../../types/grantType';
-import { Config, Envars, User } from '../../types';
+import { Config, Envars, IUserAttributes } from '../../types';
 import { API_BASE } from '../../../app';
 import config from 'config';
 
@@ -12,7 +12,7 @@ import config from 'config';
  * @param {String} refreshToken required to refresh the user auth token when it expires
  * @returns Promise that will return data or throw an error
  */
-export async function refreshAuthToken(refreshToken: string): Promise<User> {
+export async function refreshAuthToken(refreshToken: string): Promise<IUserAttributes> {
   const querystring = qs.stringify({
     grant_type: GrantType.RefreshToken,
     client_id: process.env[Envars.ClientId],

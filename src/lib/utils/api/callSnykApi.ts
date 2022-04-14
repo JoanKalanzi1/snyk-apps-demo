@@ -21,8 +21,8 @@ export function callSnykApi(tokenType: string, token: string, version: APIVersio
     },
   });
 
-  axiosInstance.interceptors.request.use(refreshTokenReqInterceptor, Promise.reject);
-  axiosInstance.interceptors.response.use((response) => response, refreshTokenRespInterceptor);
+  // axiosInstance.interceptors.request.use(refreshTokenReqInterceptor, Promise.reject);
+  // axiosInstance.interceptors.response.use((response) => response, refreshTokenRespInterceptor);
 
   return axiosInstance;
 }

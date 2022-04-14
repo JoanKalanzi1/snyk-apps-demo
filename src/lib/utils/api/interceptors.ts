@@ -1,7 +1,7 @@
 import type { AxiosError, AxiosRequestConfig } from 'axios';
 import { Envars } from '../../types';
 import { DateTime } from 'luxon';
-import User from '../../utils/db/dbmodel';
+import {User} from '../sqliteDatabase/dbmodel';
 import { EncryptDecrypt } from '../encrypt-decrypt';
 import { refreshAuthToken } from '../apiRequests';
 import axios from 'axios';
@@ -22,7 +22,7 @@ export async function refreshTokenReqInterceptor(request: AxiosRequestConfig): P
   const data = users[0];
 
   // Data used to calculate the expiry
-  const expiresIn = data.expire_in;
+  const expiresIn = data.expires_in;
   const updatedDate = data.updatedAt;
   const stringUpdated = DateTime.fromISO(updatedDate.toString());
   // Used npm library luxon to parse the date and calculate expiry

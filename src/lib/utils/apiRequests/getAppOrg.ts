@@ -3,8 +3,11 @@ import { callSnykApi } from '../api';
 
 interface APIOrg {
   id: string;
+  type: string;
   attributes: {
     name: string;
+    is_personal : boolean;
+    slug: string;
   };
 }
 
@@ -15,7 +18,7 @@ interface APIOrg {
  * @param {String} token_type token type which is normally going to be bearer
  * @returns Org data or throws and error
  */
-export async function getAppOrgs(tokenType: string, accessToken: string): Promise<{ orgs: Org[] }> {
+export async function getAppOrgs(tokenType: string, accessToken: string): Promise<string[]> {
   try {
     const clientId = process.env[Envars.ClientId];
     const result = await callSnykApi(
@@ -24,13 +27,17 @@ export async function getAppOrgs(tokenType: string, accessToken: string): Promis
       APIVersion.V3,
     )({
       method: 'GET',
-      url: `/apps/${clientId}/orgs?version=2021-08-11~experimental`,
+      url: `/orgs?version=2022-02-16~experimental`,
+     
     });
     // Fetch the first org for demo purposes
-    const orgs = result.data.data;
-    return {
-      orgs: orgs.map((org: APIOrg) => ({ id: org.id, name: org.attributes.name })),
-    };
+    const orgs: APIOrg[] = result.data.data;
+    console.log("orgs--->", orgs)
+    const orgsArray: string[] = [];
+    orgs.forEach(org => {
+        orgsArray.push(org.id)
+    })
+    return orgsArray
   } catch (error) {
     console.error('Error fetching org info: ' + error);
     throw error;
