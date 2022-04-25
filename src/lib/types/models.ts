@@ -1,10 +1,14 @@
+<<<<<<< HEAD
 
 import { DateTime } from 'luxon';
 
+=======
+>>>>>>> c07f074e556a9d57212f426d346b6109f47bf6d0
 export interface Org {
   id: string;
   name: string;
 }
+<<<<<<< HEAD
 export interface  IUserAttributes {
 
   access_token: string;
@@ -19,3 +23,5 @@ export interface  IUserAttributes {
   createdAt: DateTime;
 };
 
+=======
+>>>>>>> c07f074e556a9d57212f426d346b6109f47bf6d0
