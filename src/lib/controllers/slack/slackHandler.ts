@@ -1,7 +1,7 @@
 const axios = require('axios').default;
 import { fetchProjectNames } from '../orgprojects/orgprojectsHandler';
 const url = 'https://hooks.slack.com/services/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';
-import { getIssueData } from './getIssues/issues';
+import { getIssueData } from "./getIssues/getIssueData";
 // const url = 'https://api.snyk.io/v1/reporting/issues/latest';
 
 export async function postToSlack(names: string | string[]): Promise<any> {
@@ -89,21 +89,24 @@ export async function postToSlack(names: string | string[]): Promise<any> {
 
 // }
 
-export async function postProjectNames(): Promise<any> {
+export async function Issues(): Promise<any> {
   try {
     const slackToken = process.env.SLACK_TOKEN as string;
     const projectNames = await fetchProjectNames();
-    const stringProjectNames = projectNames.toString();
+    const issues = await getIssueData();
+    console.log(issues, 'this is issues data')
+    // const stringProjectNames = projectNames.toString();
+    const stringIssues = issues.toString()
 
     const res = await axios.post(url, {
       channel: '#slack-snyk-app-test-channel',
       text: 'Testing markdown',
       blocks: [
         {
-          type: 'Project Names',
+          type: 'section',
           text: {
-            type: 'List of names',
-            text: stringProjectNames,
+            type: 'mrkdwn',
+            text: stringIssues,
           },
         },
       ],

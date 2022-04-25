@@ -122,7 +122,7 @@ export function getOAuth2(): SnykOAuth2Strategy {
       } catch (error) {
         return done(error as Error, false);
       }
-      return done(null, { nonce });
+      return done(null, User, { nonce });
     },
 
   );

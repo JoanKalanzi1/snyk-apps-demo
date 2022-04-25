@@ -1,7 +1,7 @@
 import { callSnykApi } from '../../utils/api';
 import { EncryptDecrypt } from '../../utils/encrypt-decrypt';
 import { APIVersion, Envars } from '../../types';
-import User from '../../utils/sqliteDatabase/dbmodel';
+import { User }from '../../utils/sqliteDatabase/dbmodel';
 
 /**
  * Get projects handler that fetches all user projects
@@ -15,8 +15,13 @@ export async function getProjectsFromApi(): Promise<unknown> {
   //TODO : FIX LATER TO GET THE CORRECT USER
 
   //get all users in the database
-  const users = await User.findAll();
+  const users = await User.findAll({
+    where: {
+      id: 1
+    }
+  });
   const data = users[0];
+  console.log(data, "data")
 
   //get users from database
 

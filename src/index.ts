@@ -7,6 +7,7 @@ import {
   SlackController,
   OrgProjectController,
   ProjectNameController,
+  slackcallbackController
 } from './lib/controllers';
 import App from './app';
 import config from 'config';
@@ -36,6 +37,7 @@ new App(
     new SlackController(),
     new OrgProjectController(),
     new ProjectNameController(),
+    new slackcallbackController(),
     new DefaultController(),
   ],
   config.get(Config.Port),

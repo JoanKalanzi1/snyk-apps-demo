@@ -4,7 +4,7 @@ import { Router } from 'express';
 import { HttpException } from '../../exceptions';
 import passport from 'passport';
 import { errRedirect } from '../../middlewares';
-
+import { User } from '../../utils/sqliteDatabase/dbmodel';
 /**
  * The CallbackController class for handling the last
  * step of Snyk Authorization flow with Snyk. That is,
@@ -47,8 +47,12 @@ export class CallbackController implements Controller {
    * @returns The callback EJS template
    */
   private success(req: Request, res: Response, next: NextFunction) {
-    return res.render('callback');
+     res.locals.user = req.user || null ;
+    return res.render('callback', {
+     user : req.user
+    });
   }
+  //get the user on the function and find a way to save it.
   /**
    * Handle the failure response of authentication
    * @returns Sends error through the next function to the

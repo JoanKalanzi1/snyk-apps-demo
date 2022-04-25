@@ -1,9 +1,9 @@
 import type { Controller } from '../../types';
 import type { NextFunction, Request, Response } from 'express';
 import { Router } from 'express';
-import { postToSlack, postProjectNames } from './slackHandler';
+import { postToSlack, Issues } from './slackHandler';
 import { fetchOrgNames } from '../getorg/orgsHandlers';
-
+import { getIssueData } from "./getIssues/getIssueData";
 /**
  * The ProjectsController class for handling user projects
  * page and related refecquests. Every controller class
@@ -39,9 +39,9 @@ export class SlackController implements Controller {
    */
   private async postSlack(req: Request, res: Response, next: NextFunction) {
     try {
-      const names = await fetchOrgNames();
-      const webhook = await postToSlack(names);
-      const projectNames = await postProjectNames();
+      // const names = await fetchOrgNames();
+      // const webhook = await postToSlack(names);
+      const projectNames = await getIssueData();
       return res.render('slack', {
         projectNames,
       });

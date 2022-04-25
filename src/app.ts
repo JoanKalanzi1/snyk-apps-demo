@@ -14,8 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import dbConfig from './lib/utils/sqliteDatabase/database';
-
-
+import type { NextFunction, Request, Response } from 'express';
 export const API_BASE = config.get(Config.ApiBase);
 export const APP_BASE = config.get(Config.AppBase);
 
@@ -63,8 +62,7 @@ class App {
 
 
   private async initSQliteDb() {
-    try {
-      
+    try { 
       (await dbConfig.sync({force: true})).authenticate()
       console.log('connected to sqlite db');
     } catch (error) {
@@ -154,6 +152,10 @@ class App {
     );
   }
 
+// slack
+// Assume the installation page is located at /slack/install
+
+
   /**
    * Initialize the database file to be used by our DB
    */
@@ -171,7 +173,7 @@ class App {
    * 4. Handle the success or failure of authentication like we do
    *    in callbackController
    */
-  private setupPassport() {
+  private setupPassport(): void {
     /**
      * State: is required for authorization via Snyk Apps. State in this
      * case is managed by passportjs library. If you check the getOAuth2
