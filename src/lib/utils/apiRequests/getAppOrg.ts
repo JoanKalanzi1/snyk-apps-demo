@@ -29,7 +29,7 @@ export async function getAppOrgs(tokenType: string, accessToken: string): Promis
      
     });
     // Fetch the first org for demo purposes
-    const orgs: APIOrg[] = result.data.data;
+    const orgs: APIOrg[] = result.data.orgs;
     console.log("orgs--->", orgs)
     const orgsArray: string[] = [];
     orgs.forEach(org => {

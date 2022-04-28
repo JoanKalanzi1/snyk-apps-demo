@@ -118,12 +118,11 @@ export function getOAuth2(): SnykOAuth2Strategy {
           refresh_token: ed.encryptString(refresh_token),
           nonce,
         });
-        console.log(newUser, "user has been created")
        
       } catch (error) {
         return done(error as Error, false);
       }
-      return done(null, User, { nonce });
+      return done(null,{ nonce });
     },
 
   );

@@ -80,7 +80,7 @@ async function refreshAndUpdateDb(data: User): Promise<string> {
       token_type,
     },
     {
-      where: { userId: data.userId },
+      where: { userId: data.snyk_userId },
     },
   );
 

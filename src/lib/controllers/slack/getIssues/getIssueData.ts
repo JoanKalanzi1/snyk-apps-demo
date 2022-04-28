@@ -1,11 +1,13 @@
 import fetch from 'node-fetch';
 import { User } from '../../../utils/sqliteDatabase/dbmodel';
 import { EncryptDecrypt } from '../../../utils/encrypt-decrypt';
-import { Envars } from '../../../types';
-// import { getAppOrgs } from '../../../utils';
- const url = 'https://api.snyk.io/v1/reporting/issues/latest';
- interface Issue {
+import { APIVersion, Envars } from '../../../types';
+ const url = '/reporting/issues/latest?page=1&perPage=100&sortBy=issueTitle&order=asc&groupBy=issue';
+import { callSnykApi } from '../../../utils/api/callSnykApi'
+ interface Result {
   issue: {
+    url: string;
+    title: string;
     id: string;
     severity: string[];
     type: string;
@@ -17,18 +19,16 @@ import { Envars } from '../../../types';
 }
 
 
-export async function getIssueData(): Promise<Issue[]> {
-  const users = await User.findAll({
-   
-  });
+ export async function fetchIssueData(): Promise<Result[] | undefined> {
+   try{
+  const users = await User.findAll()
   const data = users[0]
-  console.log(data, 'data-->')
   const eD = new EncryptDecrypt(process.env[Envars.EncryptionSecret] as string);
   const access_token = eD.decryptString(data?.access_token);
-  // const token_type = data?.token_type;
+  console.log(access_token, 'in getdata')
   const getOrg = data.orgs[0];
-  console.log(getOrg, 'this is org')
 
+ 
   const body = {
     filters: {
       orgs: [`${getOrg}`],
@@ -37,12 +37,16 @@ export async function getIssueData(): Promise<Issue[]> {
     },
   };
 
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `token ${access_token}` },
-    body: JSON.stringify(body),
-  });
-  const json = await response.json();
-  // console.log('result',json.results)
-  return json.results as Issue[];
+  const response = await callSnykApi( 'bearer', access_token, APIVersion.V1).post(url,body)
+  // const json = await response.json();
+  console.log(response.data)
+  console.log(response.status)
+  return 
+  // json.result as Result[];
+}catch(error){
+  console.error(error)
 }
+}
+
+
+

@@ -1,9 +1,9 @@
 import type { Controller } from '../../types';
 import type { NextFunction, Request, Response } from 'express';
 import { Router } from 'express';
-import { postToSlack, Issues } from './slackHandler';
+import { Issues } from './slackHandler';
 import { fetchOrgNames } from '../getorg/orgsHandlers';
-import { getIssueData } from "./getIssues/getIssueData";
+import { fetchIssueData } from "./getIssues/getIssueData";
 /**
  * The ProjectsController class for handling user projects
  * page and related refecquests. Every controller class
@@ -41,9 +41,9 @@ export class SlackController implements Controller {
     try {
       // const names = await fetchOrgNames();
       // const webhook = await postToSlack(names);
-      const projectNames = await getIssueData();
+      const postIssuesToSlack = await Issues();
       return res.render('slack', {
-        projectNames,
+        postIssuesToSlack ,
       });
     } catch (error) {
       return next(error);
@@ -61,3 +61,22 @@ export class SlackController implements Controller {
   //   }
   // }
 }
+// const getAllPosts = async (req, res) => {
+//   try {
+//     const posts = await models.Post.findAll({
+//       include: [
+//         {
+//           model: models.Comment,
+//           as: "comments"
+//         },
+//         {
+//           model: models.User,
+//           as: "author"
+//         }
+//       ]
+//     });
+//     return res.status(200).json({ posts });
+//   } catch (error) {
+//     return res.status(500).send(error.message);
+//   }
+// };

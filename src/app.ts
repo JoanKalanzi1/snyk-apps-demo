@@ -14,7 +14,6 @@ import { v4 as uuidv4 } from 'uuid';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import dbConfig from './lib/utils/sqliteDatabase/database';
-import type { NextFunction, Request, Response } from 'express';
 export const API_BASE = config.get(Config.ApiBase);
 export const APP_BASE = config.get(Config.AppBase);
 
@@ -63,7 +62,7 @@ class App {
 
   private async initSQliteDb() {
     try { 
-      (await dbConfig.sync({force: true})).authenticate()
+      (await dbConfig.sync({force: false })).authenticate()
       console.log('connected to sqlite db');
     } catch (error) {
       console.error(error);
@@ -166,7 +165,7 @@ class App {
    * required to use passportjs with OAuth2.0 Snyk Authorization
    * flow.
    * 1. Initialize a passport strategy, like we go in the getOAuth2
-   * 2. Setup  middleware with all the settings, like we do
+   * 2. Setup  middleware withscu all the settings, like we do
    *    below
    * 3. Call passport.authenticate function to initiate auth flow
    *    like we do in the authController
