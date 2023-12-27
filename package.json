@@ -76,7 +76,7 @@
     "@slack/interactive-messages": "^2.0.2",
     "@slack/oauth": "^2.5.1",
     "@snyk/passport-snyk-oauth2": "^1.0.3",
-    "axios": "^0.21.4",
+    "axios": "^1.6.3",
     "config": "^3.3.7",
     "cryptr": "^6.0.2",
     "dotenv": "^10.0.0",
